@@ -8,7 +8,7 @@ const NAV_ITEMS = [
   { id: 'credibility', label: 'Source Check', icon: 'fa-check-circle' },
 ];
 
-export default function Navbar({ activePage, onNavigate }) {
+export default function Navbar({ activePage, onNavigate, darkMode, onToggleTheme }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const handleNav = (id) => {
@@ -38,9 +38,18 @@ export default function Navbar({ activePage, onNavigate }) {
           ))}
         </ul>
 
-        <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
-          <span></span><span></span><span></span>
-        </button>
+        <div className="nav-right">
+          <button className="theme-toggle" onClick={onToggleTheme} title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}>
+            <div className={`toggle-track${darkMode ? ' dark' : ''}`}>
+              <span className="toggle-icon sun"><i className="fas fa-sun"></i></span>
+              <span className="toggle-icon moon"><i className="fas fa-moon"></i></span>
+              <span className="toggle-thumb" />
+            </div>
+          </button>
+          <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
+            <span></span><span></span><span></span>
+          </button>
+        </div>
       </div>
     </nav>
   );
