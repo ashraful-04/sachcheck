@@ -8,6 +8,7 @@ import Trending from './pages/Trending';
 import SearchNews from './pages/SearchNews';
 import SourceCheck from './pages/SourceCheck';
 
+
 export default function App() {
   const [activePage, setActivePage] = useState('home');
   const [toast, setToast] = useState('');

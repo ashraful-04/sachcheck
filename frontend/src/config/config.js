@@ -7,20 +7,19 @@
 
 const CONFIG = {
   // ===== BACKEND API URL =====
-  // Change this to your friend's Flask backend URL when ready
-  BASE_URL: "http://localhost:5000/api",
+  BASE_URL: "http://localhost:8000",
 
-  // API Endpoints (your friend should implement these)
+  // API Endpoints (FastAPI backend)
   ENDPOINTS: {
-    DETECT: "/detect",           // POST - { text: "..." } → verdict, confidence, reasoning
-    TRENDING: "/trending",       // GET  - ?category=general
+    DETECT: "/predict",          // POST - { text: "..." } → status, confidence, reasoning
+    TRENDING: "/top-news",       // GET  - ?q=india
     SEARCH: "/search",           // GET  - ?q=keyword
-    CREDIBILITY: "/credibility", // GET  - ?domain=example.com
+    CREDIBILITY: "/credibility", // POST - { domain: "..." } → domain, trusted, label
   },
 
-  // Set to true to use mock data (no backend needed for demo)
-  // Set to false when connecting to actual backend
-  DEMO_MODE: true,
+  // Set to true to use mock data (no backend)
+  // Set to false to connect to FastAPI backend
+  DEMO_MODE: false,
 };
 
 // ===== TRUSTED SOURCES (JSON Whitelist) =====

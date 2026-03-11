@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import CONFIG, { MOCK_TRENDING_NEWS } from '../config/config';
 import NewsCard from '../components/NewsCard';
+import { getTopNews } from '../services/api';
 
 const CATEGORIES = [
   { id: 'general', label: 'General', icon: 'fas fa-newspaper' },
@@ -21,7 +22,6 @@ export default function Trending() {
     try {
       if (CONFIG.DEMO_MODE) {
         await new Promise((r) => setTimeout(r, 600));
-        // Filter mock data or return all
         const filtered =
           cat === 'general'
             ? MOCK_TRENDING_NEWS
@@ -30,14 +30,14 @@ export default function Trending() {
               );
         setNews(filtered.length ? filtered : MOCK_TRENDING_NEWS);
       } else {
-        const res = await fetch(
-          `${CONFIG.BASE_URL}${CONFIG.ENDPOINTS.TRENDING}?category=${cat}`
-        );
-        const data = await res.json();
-        setNews(data.articles || []);
+        // Backend /top-news uses a keyword query; pass category as the query term
+        const articles = await getTopNews(cat === 'general' ? 'india' : cat);
+        setNews(articles);
       }
-    } catch {
-      setNews(MOCK_TRENDING_NEWS);
+    } catch (err) {
+      console.error('Trending error:', err);
+      setNews(MOCK_TRENDING_NEWS); // fallback to mock on error
+      onToast?.('Could not load trending news. Showing cached data.');
     } finally {
       setLoading(false);
     }

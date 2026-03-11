@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import CONFIG, { MOCK_DETECTIONS } from '../config/config';
+import CONFIG from '../config/config';
 import { sleep, getMockResult } from '../utils/helpers';
+import { detectNews } from '../services/api';
 
 const SAMPLES = [
   'ISRO launches Chandrayaan-4 mission',
@@ -55,15 +56,9 @@ export default function DetectNews({ onToast }) {
 
       if (CONFIG.DEMO_MODE) {
         await sleep(2500);
-        data = getMockResult(text, MOCK_DETECTIONS);
+        data = getMockResult(text);
       } else {
-        const response = await fetch(`${CONFIG.BASE_URL}${CONFIG.ENDPOINTS.DETECT}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text }),
-        });
-        if (!response.ok) throw new Error('Backend error');
-        data = await response.json();
+        data = await detectNews(text);
       }
 
       setResult(data);

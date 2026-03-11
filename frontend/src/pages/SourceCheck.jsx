@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import CONFIG, { TRUSTED_SOURCES, SUSPICIOUS_SOURCES } from '../config/config';
+import { checkCredibility } from '../services/api';
 
 export default function SourceCheck({ onToast }) {
   const [domain, setDomain] = useState('');
@@ -29,12 +30,12 @@ export default function SourceCheck({ onToast }) {
           setResult({ status: 'unknown', domain: d, message: 'This source is not in our database. Exercise caution and cross-verify news from multiple sources.' });
         }
       } else {
-        const res = await fetch(`${CONFIG.BASE_URL}${CONFIG.ENDPOINTS.CREDIBILITY}?domain=${encodeURIComponent(d)}`);
-        const data = await res.json();
+        const data = await checkCredibility(d);
         setResult(data);
       }
-    } catch {
-      onToast('Could not check source. Try again later.');
+    } catch (err) {
+      console.error('Credibility error:', err);
+      onToast('Could not check source. Make sure the backend server is running.');
     } finally {
       setLoading(false);
     }

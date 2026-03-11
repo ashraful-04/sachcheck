@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import CONFIG, { MOCK_TRENDING_NEWS } from '../config/config';
 import NewsCard from '../components/NewsCard';
+import { searchNews } from '../services/api';
 
 const SUGGESTIONS = [
   'Chandrayaan Mission',
@@ -38,15 +39,13 @@ export default function SearchNews({ onToast }) {
         );
         setResults(filtered.length ? filtered : MOCK_TRENDING_NEWS.slice(0, 3));
       } else {
-        const res = await fetch(
-          `${CONFIG.BASE_URL}${CONFIG.ENDPOINTS.SEARCH}?q=${encodeURIComponent(term)}`
-        );
-        const data = await res.json();
-        setResults(data.articles || []);
+        const articles = await searchNews(term);
+        setResults(articles);
       }
-    } catch {
+    } catch (err) {
+      console.error('Search error:', err);
       setResults([]);
-      onToast('Search failed. Please try again.');
+      onToast('Search failed. Make sure the backend server is running.');
     } finally {
       setLoading(false);
     }
